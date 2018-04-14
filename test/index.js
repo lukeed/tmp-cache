@@ -18,14 +18,14 @@ test('new Cache()', t => {
 	let foo = new Cache();
 	t.is(foo.max, Infinity, '~> "max" option is `Infinity` (default)');
 	t.is(foo.stale, false, '~> "stale" option is `false` (default)');
-	t.is(foo.maxAge, 0, '~> "maxAge" option is `0` (default)');
+	t.is(foo.maxAge, -1, '~> "maxAge" option is `-1` (default)');
 	t.end();
 });
 
 test('new Cache(max)', t => {
 	let foo = new Cache(5);
 	t.is(foo.stale, false, '~> "stale" option is `false` (default)');
-	t.is(foo.maxAge, 0, '~> "maxAge" option is `0` (default)');
+	t.is(foo.maxAge, -1, '~> "maxAge" option is `-1` (default)');
 	t.is(foo.max, 5, '~> "max" option is `5`');
 	t.end();
 });
@@ -39,24 +39,31 @@ test('new Cache({ max, maxAge, stale })', t => {
 });
 
 test('Cache.set', t => {
+	let key=123, val=456;
 	let foo = new Cache();
 
-	foo.set('hello', 'world');
-	t.true(foo.has('hello'), '~> persists key');
-	t.is(foo.get('hello'), undefined, '~> key is immediately stale (config)');
-	t.false(foo.has('hello'), '~> deletes expired key');
+	foo.set(key, val);
+	t.true(foo.has(key), '~> persists key');
+	t.is(foo.get(key), val, '~> key value is returned');
+	t.true(foo.has(key), '~~> key is not purged');
 
-	foo.set('hello', 'world', 1e3);
-	t.true(foo.has('hello'), '~> persists key');
+	foo.set(key, val, 1e3);
+	t.true(foo.has(key), '~> persists key');
 
-	t.is(foo.get('hello'), 'world', '~> key is valid w/ content (maxAge)');
+	t.is(foo.get(key), val, '~> key is valid w/ content (maxAge)');
 
 	let obj = foo.values().next().value;
 	t.is(typeof obj, 'object', 'entry always written as object');
-	t.ok(obj.expires, '~> entry has "expires" key');
-	t.is(typeof obj.expires, 'number', '~~> is a number');
+	t.true(obj.expires !== void 0, '~> entry has "expires" key');
+	t.is(obj.expires, false, '~~> is `false` when not configured');
 	t.ok(obj.content, '~> entry has "content" key');
-	t.is(obj.content, 'world', '~~> is the `value` provided');
+	t.is(obj.content, val, '~~> is the `value` provided');
+
+	let bar = new Cache({ maxAge:1 });
+	bar.set(key, val);
+	let { expires } = bar.values().next().value;
+	t.true(expires !== void 0, '~> entry has "expires" key');
+	t.is(typeof expires, 'number', '~~> is a number when set');
 
 	t.end();
 });
@@ -128,18 +135,22 @@ test('Cache.get :: expires', async t => {
 test('Cache.peek', t => {
 	let key=123, val=456;
 	let foo = new Cache();
+	let bar = new Cache({ maxAge:0 });
 
 	foo.set(key, val);
-	let abc = foo.peek(key);
-	t.is(abc, undefined, '~> receives void (instantly stale)');
-	t.false(foo.has(key), '~> triggers purge');
+	t.is(foo.peek(key), val, '~> receives value');
+	t.true(foo.has(key), '~> retains key');
+
+	bar.set(key, val);
+	t.is(bar.peek(key), undefined, '~> receives undefined (stale:false)');
+	t.false(bar.has(key), '~> triggers key deletion');
 
 	t.end();
 });
 
 test('Cache.peek :: stale', t => {
 	let key=123, val=456;
-	let foo = new Cache({ stale:true });
+	let foo = new Cache({ maxAge:0, stale:true });
 
 	foo.set(key, val);
 	let abc = foo.peek(key);
@@ -151,7 +162,7 @@ test('Cache.peek :: stale', t => {
 
 test('Cache.peek :: maxAge', t => {
 	let key=123, val=456;
-	let foo = new Cache({ maxAge: 1e3 });
+	let foo = new Cache({ maxAge:1e3 });
 	let toObj = () => foo.values().next().value;
 
 	foo.set(key, val);
@@ -174,14 +185,45 @@ test('Cache.peek :: maxAge', t => {
 test('Cache.size', t => {
 	let foo = new Cache();
 
-	foo.set(1, 1);
+	foo.set(1, 1, 0); // expire instantly
 	t.is(foo.size, 1, '~> 1');
 
 	foo.set(2, 2);
 	t.is(foo.size, 2, '~> 2');
 
-	foo.get(1); // expired + delete
+	foo.get(1); // expired & deleted
 	t.is(foo.size, 1, '~> 1');
 
 	t.end();
+});
+
+test('least recently set', t => {
+  let foo = new Cache(2);
+  foo.set('a', 'A');
+  foo.set('b', 'B');
+  foo.set('c', 'C');
+  t.is(foo.get('c'), 'C');
+  t.is(foo.get('b'), 'B');
+  t.is(foo.get('a'), undefined);
+  t.end();
+});
+
+test('lru recently gotten', t => {
+  let foo = new Cache(2);
+  foo.set('a', 'A');
+  foo.set('b', 'B');
+  foo.get('a');
+  foo.set('c', 'C');
+  t.equal(foo.get('c'), 'C');
+  t.equal(foo.get('b'), undefined);
+  t.equal(foo.get('a'), 'A');
+  t.end();
+});
+
+test('Cache.delete', t => {
+  let foo = new Cache(2)
+  foo.set('a', 'A');
+  foo.delete('a');
+  t.equal(foo.get('a'), undefined);
+  t.end();
 });
