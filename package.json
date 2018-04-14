@@ -1,0 +1,28 @@
+{
+  "name": "tmp-cache",
+  "version": "0.0.0",
+  "repository": "lukeed/tmp-cache",
+  "description": "A least-recently-used cache manager in 35 lines of code",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Luke Edwards",
+    "email": "luke.edwards05@gmail.com",
+    "url": "lukeed.com"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "scripts": {
+    "test": "tape test/*.js | tap-spec"
+  },
+  "files": [
+    "lib"
+  ],
+  "keywords": [
+  ],
+  "devDependencies": {
+    "tap-spec": "^4.1.1",
+    "tape": "^4.8.0"
+  }
+}
