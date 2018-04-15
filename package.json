@@ -1,6 +1,6 @@
 {
   "name": "tmp-cache",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "repository": "lukeed/tmp-cache",
   "description": "A least-recently-used cache manager in 35 lines of code",
   "main": "lib/index.js",
