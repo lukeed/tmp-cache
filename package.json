@@ -20,6 +20,10 @@
     "lib"
   ],
   "keywords": [
+    "cache",
+    "lru",
+    "lru-cache",
+    "mru"
   ],
   "devDependencies": {
     "tap-spec": "^4.1.1",
