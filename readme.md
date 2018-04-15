@@ -19,11 +19,33 @@ $ npm install --save tmp-cache
 ## Usage
 
 ```js
-const LRU = require('tmp-cache');
+const Cache = require('tmp-cache');
 
-let cache = new LRU(5); // sets "max" size
+let cache = new Cache(3); // sets "max" size
 
-// TODO
+cache.set('a', 1); //~> ['a']
+cache.set('b', 2); //~> ['a', 'b']
+cache.set('c', 3); //~> ['a', 'b', 'c']
+cache.get('a');    //~> ['b', 'c', 'a']
+cache.set('d', 4); //~> ['c', 'a', 'd']
+cache.peek('a');   //~> ['c', 'a', 'd']
+cache.delete('d'); //~> ['c', 'a']
+cache.has('d');    //=> false
+cache.set('e', 5); //~> ['c', 'a', 'e']
+cache.size;        //=> 3
+cache.clear();     //~> []
+
+cache = new Cache({ maxAge:10 });
+
+cache.set(123, 'hello'); //~> valid for 10ms
+cache.get(123); //=> 'hello'  --  resets 10ms counter
+setTimeout(_ => cache.get(123), 25); //=> undefined
+
+cache = new Cache({ maxAge:0, stale:true });
+
+cache.set('foo', [123]); //~> already stale, 0ms lifespan
+cache.get('foo'); //=> [123]  --  because options.stale
+cache.get('foo'); //=> undefined  --  previous op flagged removal
 ```
 
 ## API
