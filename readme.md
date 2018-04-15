@@ -61,9 +61,9 @@ Returns: `Cache extends Map`
 Type: `Number`<br>
 Default: `Infinity`
 
-The maximum number of items the cache will hold. Adding more entries will force the oldest, least-recently-used items to be purged.
+The maximum number of items the cache will hold. Adding more entries will force the oldest, least-recently-used item to be purged.
 
-Failure to include any `max` restriction could potentially allow an infinite number of unqiue entries! They will only be purged based on their `expires` value (if set).
+Failure to include any `max` restriction could potentially allow infinite unique entries! They will only be purged based on their `expires` value (if set).
 
 > **Note:** If `options` is an integer, then it is used as the `options.max` value.
 
@@ -72,9 +72,9 @@ Failure to include any `max` restriction could potentially allow an infinite num
 Type: `Number`<br>
 Default: `-1`
 
-The maximum age (in ms) an item is considered valid.
+The maximum age (in ms) an item is considered valid; aka, its lifespan.
 
-Items are not pro-actively pruned out as they age, but if you try to access an item that has expired, it will be purged it and, by default, result in an `undefined` response.
+Items are not pro-actively pruned out as they age, but if you try to access an item that has expired, it will be purged and, by default, result in an `undefined` response.
 
 #### options.stale
 
@@ -93,7 +93,7 @@ When setting or updating an item that already exists, the original is removed. T
 #### key
 Type: `String`
 
-The item's unqiue identifier.
+The item's unique identifier.
 
 #### value
 Type: `Mixed`
@@ -116,7 +116,7 @@ May also return `undefined` if the item does not exist, or if it has expired & [
 #### key
 Type: `String`
 
-The item's unqiue identifier.
+The item's unique identifier.
 
 #### mutate
 Type: `Boolean`<br>
@@ -134,7 +134,7 @@ May also return `undefined` if the item does not exist, or if it has expired & [
 #### key
 Type: `String`
 
-The item's unqiue identifier.
+The item's unique identifier.
 
 
 
