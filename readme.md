@@ -1,6 +1,6 @@
 # tmp-cache [![Build Status](https://travis-ci.org/lukeed/tmp-cache.svg?branch=master)](https://travis-ci.org/lukeed/tmp-cache)
 
-> A least-recently-used cache manager in 35 lines of code~!
+> A least-recently-used cache in 35 lines of code~!
 
 LRU caches operate on a first-in-first-out queue. This means that the first item is the oldest and will therefore be deleted once the `max` limit has been reached.
 
