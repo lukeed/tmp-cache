@@ -1,4 +1,4 @@
-# tmp-cache [![Build Status](https://travis-ci.org/lukeed/tmp-cache.svg?branch=master)](https://travis-ci.org/lukeed/tmp-cache)
+# tmp-cache ![CI](https://github.com/lukeed/tmp-cache/workflows/CI/badge.svg)
 
 > A least-recently-used cache in 35 lines of code~!
 
