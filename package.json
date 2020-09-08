@@ -2,8 +2,9 @@
   "name": "tmp-cache",
   "version": "1.0.0",
   "repository": "lukeed/tmp-cache",
-  "description": "A least-recently-used cache manager in 35 lines of code",
+  "description": "A least-recently-used cache in 35 lines of code",
   "main": "lib/index.js",
+  "types": "index.d.ts",
   "license": "MIT",
   "author": {
     "name": "Luke Edwards",
@@ -17,6 +18,7 @@
     "test": "tape test/*.js | tap-spec"
   },
   "files": [
+    "*.d.ts",
     "lib"
   ],
   "keywords": [
