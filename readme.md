@@ -1,4 +1,4 @@
-# tmp-cache ![CI](https://github.com/lukeed/tmp-cache/workflows/CI/badge.svg)
+# tmp-cache ![CI](https://github.com/lukeed/tmp-cache/workflows/CI/badge.svg) [![codecov](https://badgen.net/codecov/c/github/lukeed/tmp-cache)](https://codecov.io/gh/lukeed/tmp-cache)
 
 > A least-recently-used cache in 35 lines of code~!
 
